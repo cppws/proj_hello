@@ -4,6 +4,8 @@
 #include <cmath>
 #include <cfloat>
 #include <string>
+#include <time.h>
+#include <random>
 
 #include "kutils.h"
 #include "kmeans.h"
@@ -51,9 +53,9 @@ class KMeans
 public:
     typedef struct Point
     {
-        uint value_count;
-        uint groupID;
-        uint cellID;
+        uint32_t value_count;
+        uint32_t groupID;
+        uint32_t cellID;
 
         uint8_t *values;
 
@@ -62,7 +64,7 @@ public:
         {
         }
 
-        Point(uint8_t *v, uint c, uint id) : values(v), value_count(c), groupID(0), cellID(id)
+        Point(uint8_t *v, uint32_t c, uint32_t id) : values(v), value_count(c), groupID(0), cellID(id)
         {
         }
 
@@ -365,10 +367,10 @@ bool KMeans::InitKCenter()
 
             for (int i = 0; i < K; i++)
             {
-                int seed = random() % (size);
+                int seed = rand() % (size);
                 while (ContainInt(usedseed, seed))
                 {
-                    seed = random() % (size);
+                    seed = rand() % (size);
                 }
                 usedseed.push_back(seed);
                 centerPoints[i] = Point2Dim(originalPoints[seed]);
@@ -443,7 +445,7 @@ KMeans loadRamdomPoint()
     int *values = new int[TEST_POINT_RANDOM_COUNT * TEST_BYTE_COUNT_PER_CELL * BIT_STEP]{};
     for (size_t i = 0; i < (TEST_POINT_RANDOM_COUNT * TEST_BYTE_COUNT_PER_CELL * BIT_STEP); i++)
     {
-        int seed = random() % 2;
+        int seed = rand() % 2;
         values[i] = seed;
     }
 

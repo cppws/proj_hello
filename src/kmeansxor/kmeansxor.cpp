@@ -4,6 +4,7 @@
 #include <cmath>
 #include <cfloat>
 #include <string>
+#include <time.h>
 
 #include "kutils.h"
 #include "kmeansxor.h"
@@ -13,9 +14,9 @@ class KMeansXOR
 public:
     typedef struct Point
     {
-        uint value_count;
-        uint groupID;
-        uint cellID;
+        uint32_t value_count;
+        uint32_t groupID;
+        uint32_t cellID;
 
         uint8_t *values;
 
@@ -24,7 +25,7 @@ public:
         {
         }
 
-        Point(uint8_t *v, uint c, uint id) : values(v), value_count(c), groupID(0), cellID(id)
+        Point(uint8_t *v, uint32_t c, uint32_t id) : values(v), value_count(c), groupID(0), cellID(id)
         {
         }
 
@@ -81,8 +82,8 @@ public:
 
     DimPoints UpdateGroupCenter(std::vector<Points> &grpPoints, DimPoints centers);
 
-    uint DistanceBetweenPoints(Point &point1, DimPoint &dp2);
-    uint DistanceBetweenPoints(DimPoint &dp1, DimPoint &dp2);
+    uint32_t DistanceBetweenPoints(Point &point1, DimPoint &dp2);
+    uint32_t DistanceBetweenPoints(DimPoint &dp1, DimPoint &dp2);
 
     bool IsCenterShiftExist(DimPoints &prevCenters, DimPoints &curCenters);
 
@@ -122,11 +123,11 @@ KMeansXOR::DimPoint KMeansXOR::Point2Dim(Point &point)
     return dimpoint;
 }
 
-uint KMeansXOR::DistanceBetweenPoints(Point &point1, DimPoint &dp2)
+uint32_t KMeansXOR::DistanceBetweenPoints(Point &point1, DimPoint &dp2)
 {
     // construct dimention values array for 2 points
     uint8_t p1[BIT_COUNT]{};
-    uint dist = 0;
+    uint32_t dist = 0;
     for (int i = 0; i < BIT_COUNT; i++)
     {
         int index = (i / BIT_STEP);
@@ -141,9 +142,9 @@ uint KMeansXOR::DistanceBetweenPoints(Point &point1, DimPoint &dp2)
     return dist;
 }
 
-uint KMeansXOR::DistanceBetweenPoints(DimPoint &dp1, DimPoint &dp2)
+uint32_t KMeansXOR::DistanceBetweenPoints(DimPoint &dp1, DimPoint &dp2)
 {
-    uint dist = 0;
+    uint32_t dist = 0;
     for (int i = 0; i < BIT_COUNT; i++)
     {
         if (dp1.dimension[i] != dp2.dimension[i])
@@ -169,7 +170,7 @@ bool KMeansXOR::IsCenterShiftExist(DimPoints &prevCenters, DimPoints &curCenters
 
 KMeansXOR::DimPoints KMeansXOR::UpdateGroupCenter(std::vector<Points> &grpPoints, DimPoints centers)
 {
-    uint bitvalues[BIT_COUNT]{}; // add {} to init with 0
+    uint32_t bitvalues[BIT_COUNT]{}; // add {} to init with 0
     for (size_t i = 0; i < K; i++)
     {
         int grpSize = grpPoints[i].size();
@@ -221,11 +222,11 @@ bool KMeansXOR::Cluster()
     {
         for (size_t i = 0; i < pointCount; i++)
         {
-            uint min_dist = BIT_COUNT;
+            uint32_t min_dist = BIT_COUNT;
             int grp = 0;
             for (size_t j = 0; j < K; j++)
             {
-                uint dist = DistanceBetweenPoints(originalPoints[i], centerPoints[j]);
+                uint32_t dist = DistanceBetweenPoints(originalPoints[i], centerPoints[j]);
 
                 // if (min_dist - dist > DIST_ZERO)//TODO convert bug
                 if (min_dist > dist)
@@ -280,10 +281,10 @@ bool KMeansXOR::InitKCenter()
 
             for (int i = 0; i < K; i++)
             {
-                int seed = random() % (size);
+                int seed = rand() % (size);
                 while (ContainInt(usedseed, seed))
                 {
-                    seed = random() % (size);
+                    seed = rand() % (size);
                 }
                 usedseed.push_back(seed);
                 centerPoints[i] = Point2Dim(originalPoints[seed]);
@@ -360,7 +361,7 @@ namespace XOR
         int *values = new int[TEST_POINT_RANDOM_COUNT * TEST_BYTE_COUNT_PER_CELL * BIT_STEP]{};
         for (size_t i = 0; i < (TEST_POINT_RANDOM_COUNT * TEST_BYTE_COUNT_PER_CELL * BIT_STEP); i++)
         {
-            int seed = random() % 2;
+            int seed = rand() % 2;
             values[i] = seed;
         }
 

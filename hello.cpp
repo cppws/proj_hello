@@ -1,10 +1,13 @@
 
+#include <vector>
 #include <climits>
 #include <float.h>
 #include <iostream>
 #include "kmath.h"
 
-void showByteBinary(uint8_t *value, int count)
+
+// void showByteBinary(uint8_t *value, int count)
+void showByteBinary(std::vector<uint8_t>& value, int count)
 {
     for (int c = 0; c < count; c++)
     {
@@ -69,7 +72,8 @@ int main()
         "0000000000000000"
         "0100000010000000";
 
-    uint8_t pv[cell_count][byte_count] = {};
+    // uint8_t pv[cell_count][byte_count] = {};
+    std::vector<std::vector<uint8_t>> pv(cell_count, std::vector<uint8_t>(byte_count));
     for (size_t i = 0; i < cell_count; i++)
     {
         uint8_t p = 0; // TODO delete
@@ -129,7 +133,8 @@ int main()
     }
 
     int half = cell_count / 2;
-    uint8_t center[byte_count] = {};
+    // uint8_t center[byte_count] = {};
+    std::vector<uint8_t> center(byte_count);
     for (int i = 0; i < bit_count; i++)
     {
         sumBits[i] = sumBits[i] > half ? 1 : 0;
